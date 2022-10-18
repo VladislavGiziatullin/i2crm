@@ -1,0 +1,7 @@
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
+default:
+    path: /
+    controller: App\Controller\DefaultController::index
