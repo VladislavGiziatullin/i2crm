@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -19,10 +19,26 @@
                 margin: auto;
                 width: 80vw;
             }
+            .header {
+                display: flex;
+                justify-content: right;
+            }
         </style>
     </head>
     <body>
         <div class="wrapper">
+            <div class="messages">
+                {% if error is defined and error %}
+                    <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                {% endif %}
+            </div>
+            <div class="header">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="logout">
+                        <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+            </div>
             {% block body %}{% endblock %}
         </div>
     </body>

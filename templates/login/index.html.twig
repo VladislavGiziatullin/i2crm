@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login!{% endblock %}
+
+{% block body %}
+    <div class="login">
+        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'github' }) }}">
+            <span>Login with GitHub</span>
+        </a>
+    </div>
+{% endblock %}
