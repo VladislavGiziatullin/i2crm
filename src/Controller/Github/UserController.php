@@ -2,9 +2,12 @@
 
 namespace App\Controller\Github;
 
-use App\Entity\Github\User;
+use App\Entity\Github\User as GithubUser;
+use App\Entity\User;
 use App\Form\Github\UserType;
 use App\Repository\Github\UserRepository;
+use Github\AuthMethod;
+use Github\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +25,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_github_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository): Response
+    public function new(Request $request, UserRepository $userRepository, Client $githubClient): Response
     {
-        $user = new User();
+        /** @var User $sessionUser */
+        $sessionUser = $this->getUser();
+        $githubClient->authenticate($sessionUser->getGithubAccessToken(), AuthMethod::JWT);
+
+        $user = new GithubUser();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -41,7 +48,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'app_github_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(GithubUser $user): Response
     {
         return $this->render('github/user/show.html.twig', [
             'user' => $user,
@@ -49,7 +56,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_github_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, GithubUser $user, UserRepository $userRepository): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -67,7 +74,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'app_github_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, GithubUser $user, UserRepository $userRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
