@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserRepo index{% endblock %}
+
+{% block body %}
+    <h1>UserRepo index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>GithubRepoId</th>
+                <th>GithubUserId</th>
+                <th>Name</th>
+                <th>RepoUpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user_repo in user_repos %}
+            <tr>
+                <td>{{ user_repo.id }}</td>
+                <td>{{ user_repo.githubRepoId }}</td>
+                <td>{{ user_repo.githubUserId }}</td>
+                <td>{{ user_repo.name }}</td>
+                <td>{{ user_repo.repoUpdatedAt ? user_repo.repoUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

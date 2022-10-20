@@ -21,7 +21,7 @@
             }
             .header {
                 display: flex;
-                justify-content: right;
+                justify-content: space-between;
             }
         </style>
     </head>
@@ -34,6 +34,9 @@
             </div>
             <div class="header">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="menu">
+                        <a href="{{ path('app_home') }}">Home</a>
+                    </div>
                     <div class="logout">
                         <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
