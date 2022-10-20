@@ -47,8 +47,6 @@ class EntityUserProvider implements UserProviderInterface, OAuthAwareUserProvide
             $user = (new User())
                 ->setUsername($response->getNickname())
                 ->setGithubUserId($githubUserId);
-
-            $this->repository->save($user, true);
         }
 
         $githubAccessToken = $response->getAccessToken();
@@ -57,6 +55,8 @@ class EntityUserProvider implements UserProviderInterface, OAuthAwareUserProvide
                 ->setGithubAccessTokenExpiresAt(DateTime::createFromFormat('U', time() + $response->getExpiresIn()))
                 ->setGithubRefreshToken($response->getRefreshToken());
         }
+
+        $this->repository->save($user, true);
 
         return $user;
     }
