@@ -47,32 +47,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id<\d+>}', name: 'app_github_user_show', methods: ['GET'])]
-    public function show(GithubUser $user): Response
-    {
-        return $this->render('github/user/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_github_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GithubUser $user, UserRepository $userRepository): Response
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->save($user, true);
-
-            return $this->redirectToRoute('app_github_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('github/user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/{id<\d+>}', name: 'app_github_user_delete', methods: ['POST'])]
     public function delete(Request $request, GithubUser $user, UserRepository $userRepository): Response
     {
