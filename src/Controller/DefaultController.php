@@ -10,7 +10,7 @@ class DefaultController extends AbstractController
 {
     public function index(): Response
     {
-        return $this->render('base.html.twig');
+        return $this->render('default/index.html.twig');
     }
 
     #[Route('/logout', name: 'app_logout')]
