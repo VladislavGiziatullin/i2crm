@@ -2,18 +2,19 @@
 
 namespace App\Validator\Github;
 
-use Github\Client;
+use App\Entity\Github\User;
+use App\Integration\Github\Exception\NotFoundException;
+use App\Repository\Github\APIRepository;
 use Github\Exception\ApiLimitExceedException;
-use Psr\Http\Client\ClientExceptionInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UserNameIsExistsValidator extends ConstraintValidator
 {
-    public function __construct(private readonly Client $client) {}
+    public function __construct(private readonly APIRepository $APIRepository) {}
 
     /**
+     * @param User $value
      * @param UserNameIsExists $constraint
      */
     public function validate($value, Constraint $constraint)
@@ -23,19 +24,15 @@ class UserNameIsExistsValidator extends ConstraintValidator
         }
 
         try {
-            $this->client->user()->show($value);
+            $username = $value->getUsername();
+            $this->APIRepository->getUser($value->getAddedByUserId(), $username);
         } catch (ApiLimitExceedException $exception) {
             $this->context->buildViolation($exception->getMessage())->addViolation();
-        } catch (ClientExceptionInterface $exception) {
-            if ($exception->getCode() === Response::HTTP_NOT_FOUND) {
-                $this->context->buildViolation($constraint->message)
-                    ->setParameter('{{ value }}', $value)
-                    ->addViolation();
-            } else {
-                throw $exception;
-            }
-
-            // todo need handle another exception
+        } catch (NotFoundException $exception) {
+            $this->context->buildViolation($constraint->message)
+                ->atPath('username')
+                ->setParameter('{{ value }}', $username)
+                ->addViolation();
         }
     }
 }

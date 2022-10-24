@@ -1,0 +1,11 @@
+[Unit]
+Description=Symfony messenger-consumer async_user_repo_update %i
+# also can supervisor
+
+[Service]
+ExecStart=php /absolute_path_to_app/bin/console messenger:consume async_user_repo_update --time-limit=3600
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=timers.target

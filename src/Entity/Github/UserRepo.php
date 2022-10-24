@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepoRepository::class)]
 #[ORM\Table(name: '`github_user_repo`')]
+#[ORM\Index(columns: ['github_user_id'], name: 'idx_github_user_repo_github_user_id')]
+#[ORM\Index(columns: ['github_repo_id'], name: 'idx_github_user_repo_github_repo_id')]
+#[ORM\Index(columns: ['repo_updated_at'], name: 'idx_repo_updated_at')]
 class UserRepo
 {
     #[ORM\Id]
@@ -25,7 +28,7 @@ class UserRepo
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $repoUpdatedAt = null;
 
     public function getId(): ?int

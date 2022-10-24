@@ -1,0 +1,9 @@
+[Unit]
+Description=Create message for messenger-consumer async_user_repo_update
+# also can user cron, bashscript(systemd-run --on-unit-active=10m), supervisor
+
+[Service]
+ExecStart=php /absolute_path_to_app/bin/console app:update-users-repos
+
+[Install]
+WantedBy=default.target

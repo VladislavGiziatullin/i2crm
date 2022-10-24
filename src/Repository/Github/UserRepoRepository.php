@@ -4,6 +4,7 @@ namespace App\Repository\Github;
 
 use App\Entity\Github\UserRepo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,6 +31,18 @@ class UserRepoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param iterable|UserRepo[] $collection
+     */
+    public function saveBulk(iterable $collection): void
+    {
+        foreach ($collection as $item) {
+            $this->save($item);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
     public function remove(UserRepo $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -39,28 +52,30 @@ class UserRepoRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return UserRepo[] Returns an array of UserRepo objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param iterable|ArrayCollection<UserRepo> $collection
+     */
+    public function removeBulk(iterable $collection)
+    {
+        foreach ($collection as $item) {
+            $this->remove($item);
+        }
 
-//    public function findOneBySomeField($value): ?UserRepo
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return iterable|ArrayCollection<UserRepo>
+     */
+    public function findByGithubUserAndNames(int $userId): iterable
+    {
+        $qb = $this->createQueryBuilder('gur');
+
+        $query = $qb
+            ->andWhere("gur.githubUserId = :userId")
+            ->setParameter('userId', $userId)
+            ->getQuery();
+
+        return new ArrayCollection($query->getResult());
+    }
 }

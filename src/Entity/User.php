@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,7 +30,7 @@ class User implements UserInterface
     private ?string $githubAccessToken = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $githubAccessTokenExpiresAt = null;
+    private ?DateTimeInterface $githubAccessTokenExpiresAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $githubRefreshToken = null;
@@ -115,12 +114,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGithubAccessTokenExpiresAt(): ?\DateTimeInterface
+    public function getGithubAccessTokenExpiresAt(): ?DateTimeInterface
     {
         return $this->githubAccessTokenExpiresAt;
     }
 
-    public function setGithubAccessTokenExpiresAt(?\DateTimeInterface $githubAccessTokenExpiresAt): self
+    public function setGithubAccessTokenExpiresAt(?DateTimeInterface $githubAccessTokenExpiresAt): self
     {
         $this->githubAccessTokenExpiresAt = $githubAccessTokenExpiresAt;
 

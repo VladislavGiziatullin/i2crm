@@ -1,0 +1,11 @@
+[Unit]
+Description=Create message for messenger-consumer async_user_repo_update
+# also can user cron, bashscript(systemd-run --on-unit-active=10m), supervisor
+
+[Timer]
+Unit=update-user-repo-producer.service
+OnBootSec=1m
+OnUnitActiveSec=10m
+
+[Install]
+WantedBy=timers.target

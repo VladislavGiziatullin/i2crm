@@ -5,8 +5,13 @@ namespace App\Validator\Github;
 use Attribute;
 use Symfony\Component\Validator\Constraint;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_CLASS)]
 class UserNameIsExists extends Constraint
 {
     public string $message = 'The username "{{ value }}" not found in github.';
+
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
+    }
 }

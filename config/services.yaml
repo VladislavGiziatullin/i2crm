@@ -20,5 +20,18 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Integration\Github\Client:
+        shared: false
+        arguments:
+            - '%env(GITHUB_APP_CLIENT_ID)%'
+            - '%env(GITHUB_APP_CLIENT_SECRET)%'
+
+    App\EventSubscriber\Github\UserSubscriber:
+        tags:
+            -
+                name: 'doctrine.orm.entity_listener'
+                event: 'prePersist'
+                entity: 'App\Entity\Github\User'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -5,9 +5,7 @@ namespace App\Controller\Github;
 use App\Entity\Github\User as GithubUser;
 use App\Entity\User;
 use App\Form\Github\UserType;
-use App\Repository\Github\UserRepository;
-use Github\AuthMethod;
-use Github\Client;
+use App\Service\Github\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,26 +15,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_github_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserService $userService): Response
     {
         return $this->render('github/user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $userService->getAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_github_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, Client $githubClient): Response
+    public function new(Request $request, UserService $userService): Response
     {
+        $user = new GithubUser();
         /** @var User $sessionUser */
         $sessionUser = $this->getUser();
-        $githubClient->authenticate($sessionUser->getGithubAccessToken(), AuthMethod::JWT);
+        $user->setAddedByUserId($sessionUser->getId()); //  Need for App\Validator\Github\UserNameIsExistsValidator
 
-        $user = new GithubUser();
         $form = $this->createForm(UserType::class, $user);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->save($user, true);
+            $userService->create($user, $sessionUser);
 
             return $this->redirectToRoute('app_github_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -48,10 +47,10 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'app_github_user_delete', methods: ['POST'])]
-    public function delete(Request $request, GithubUser $user, UserRepository $userRepository): Response
+    public function delete(Request $request, GithubUser $user, UserService $userService): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($user, true);
+            $userService->remove($user);
         }
 
         return $this->redirectToRoute('app_github_user_index', [], Response::HTTP_SEE_OTHER);
