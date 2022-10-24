@@ -2,8 +2,7 @@
 
 namespace App\Entity\Github;
 
-use App\Repository\Github\UserRepository;
-use App\Validator\Github as GitHubValidator;
+use App\Infrastructure\Repository\Github\UserRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Table(name: '`github_user`')]
 #[ORM\Index(columns: ['github_user_id'], name: 'idx_github_user_github_user_id')]
 #[UniqueEntity('username')]
-#[GitHubValidator\UserNameIsExists]
+#[\App\Infrastructure\Validator\Github\UserNameIsExists]
 class User
 {
     #[ORM\Id]

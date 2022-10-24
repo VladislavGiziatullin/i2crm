@@ -4,8 +4,8 @@ namespace App\Service\Github;
 
 use App\Entity\Github\User;
 use App\Entity\Github\UserRepo;
-use App\Repository\Github\APIRepository;
-use App\Repository\Github\UserRepoRepository;
+use App\Infrastructure\Repository\Github\APIRepository;
+use App\Infrastructure\Repository\Github\UserRepoRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 

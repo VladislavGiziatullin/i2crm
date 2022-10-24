@@ -28,7 +28,7 @@ framework:
             # sync: 'sync://'
 
         routing:
-             'App\Message\Github\UpdateUserRepoMessage': async_user_repo_update
+             'App\Infrastructure\Message\Github\UpdateUserRepoMessage': async_user_repo_update
 
 # when@test:
 #    framework:

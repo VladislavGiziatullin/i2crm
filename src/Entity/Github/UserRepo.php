@@ -2,7 +2,7 @@
 
 namespace App\Entity\Github;
 
-use App\Repository\Github\UserRepoRepository;
+use App\Infrastructure\Repository\Github\UserRepoRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

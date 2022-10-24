@@ -4,8 +4,8 @@ namespace App\Service\Github;
 
 use App\Entity\Github\User as GithubUser;
 use App\Entity\User;
-use App\Repository\Github\APIRepository;
-use App\Repository\Github\UserRepository;
+use App\Infrastructure\Repository\Github\APIRepository;
+use App\Infrastructure\Repository\Github\UserRepository;
 
 class UserService
 {

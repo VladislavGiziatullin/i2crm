@@ -1,7 +1,7 @@
 security:
     providers:
         oauth_user_provider:
-            id: App\Security\Github\EntityUserProvider
+            id: App\Infrastructure\Security\Github\EntityUserProvider
 
     firewalls:
         dev:
@@ -16,7 +16,7 @@ security:
                 failure_path: /login/
 
                 oauth_user_provider:
-                    service: App\Security\Github\EntityUserProvider
+                    service: App\Infrastructure\Security\Github\EntityUserProvider
             logout:
                 path: app_logout
             # activate different ways to authenticate
